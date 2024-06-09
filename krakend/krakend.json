@@ -1,0 +1,149 @@
+{
+  "$schema": "https://www.krakend.io/schema/krakend.json",
+  "version": 3,
+  "name": "KrakenD - API Gateway",
+  "host": ["http://localhost:8081"],
+  "port": 8081,
+  "extra_config": {
+    "security/cors": {
+      "allow_origins": [
+        "*"
+      ],
+      "expose_headers": [
+          "*"
+      ],
+      "max_age": "12h",
+      "allow_methods": [
+        "GET",
+        "HEAD",
+        "POST",
+        "PUT",
+        "DELETE",
+        "OPTIONS"
+      ],
+      "allow_headers": [
+          "*"
+      ],
+      "allow_credentials": true
+    }
+  },
+  "timeout": "3s",
+  "endpoints": [
+      {
+          "endpoint": "/users",
+          "input_headers": [
+              "Authorization"
+          ],
+          "output_encoding": "no-op",
+          "extra_config": {
+              "auth/validator": {
+                  "alg": "RS256",
+                  "jwk_url": "http://keycloak:8080/realms/realm-0/protocol/openid-connect/certs",
+                  "cache": true,
+                  "disable_jwk_security": true
+              }
+          },
+          "backend": [
+              {
+                  "host": ["http://192.168.15.4:3000"],
+                  "url_pattern": "/users",
+                  "encoding": "no-op"
+              }
+          ]
+      },
+      {
+          "endpoint": "/users/{username}",
+          "input_headers": [
+              "Authorization"
+          ],
+          "extra_config": {
+              "auth/validator": {
+                  "alg": "RS256",
+                  "jwk_url": "http://keycloak:8080/realms/realm-0/protocol/openid-connect/certs",
+                  "cache": true,
+                  "disable_jwk_security": true
+              }
+          },
+          "backend": [
+              {
+                  "host": ["http://192.168.15.4:3000"],
+                  "url_pattern": "/users/{username}"
+              }
+          ]
+      },
+      {
+          "endpoint": "/users",
+          "input_headers": [
+              "Authorization",
+              "Content-Type"
+          ],
+          "method": "POST",
+          "output_encoding": "no-op",
+          "extra_config": {
+              "auth/validator": {
+                  "alg": "RS256",
+                  "jwk_url": "http://keycloak:8080/realms/realm-0/protocol/openid-connect/certs",
+                  "cache": true,
+                  "disable_jwk_security": true
+              }
+          },
+          "backend": [
+              {
+                  "host": ["http://192.168.15.4:3000"],
+                  "method": "POST",
+                  "url_pattern": "/users",
+                  "encoding": "no-op"
+              }
+          ]
+      },
+      {
+          "endpoint": "/users/{username}",
+          "input_headers": [
+              "Authorization",
+              "Content-Type"
+          ],
+          "method": "PUT",
+          "output_encoding": "no-op",
+          "extra_config": {
+              "auth/validator": {
+                  "alg": "RS256",
+                  "jwk_url": "http://keycloak:8080/realms/realm-0/protocol/openid-connect/certs",
+                  "cache": true,
+                  "disable_jwk_security": true
+              }
+          },
+          "backend": [
+              {
+                  "host": ["http://192.168.15.4:3000"],
+                  "method": "PUT",
+                  "url_pattern": "/users/{username}",
+                  "encoding": "no-op"
+              }
+          ]
+      },
+      {
+          "endpoint": "/users/{username}",
+          "input_headers": [
+              "Authorization"
+          ],
+          "output_encoding": "no-op",
+          "method": "DELETE",
+          "extra_config": {
+              "auth/validator": {
+                  "alg": "RS256",
+                  "jwk_url": "http://keycloak:8080/realms/realm-0/protocol/openid-connect/certs",
+                  "cache": true,
+                  "disable_jwk_security": true
+              }
+          },
+          "backend": [
+              {
+                  "host": ["http://192.168.15.4:3000"],
+                  "method": "DELETE",
+                  "url_pattern": "/users/{username}",
+                  "encoding": "no-op"
+              }
+          ]
+      }
+  ]
+}
